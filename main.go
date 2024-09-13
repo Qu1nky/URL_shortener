@@ -21,18 +21,18 @@ var (
 	useDB       bool
 )
 
-const urlChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 // Генерация сокращённого URL
 func generateShortURL() (string, error) {
 	length := 7
 	result := make([]byte, length)
 	for i := 0; i < length; i++ {
-		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(urlChars))))
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(alphabet))))
 		if err != nil {
 			return "", err
 		}
-		result[i] = urlChars[num.Int64()]
+		result[i] = alphabet[num.Int64()]
 	}
 	return string(result), nil
 }
@@ -101,7 +101,6 @@ func getOriginalURLHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	originalURL = memoryStore[shortURL]
 
-	// Возвращаем оригинальный URL
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", originalURL)
 }
@@ -115,7 +114,6 @@ func initDB() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
-	// Создание таблицы, если её нет
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS urls (
 			short_url VARCHAR(7) PRIMARY KEY,
@@ -127,7 +125,7 @@ func initDB() {
 	}
 }
 
-// Основная функция
+
 func main() {
 	// Определение использования базы данных на основе флага запуска
 	useDB = len(os.Args) > 1 && os.Args[1] == "-d"
