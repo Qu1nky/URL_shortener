@@ -1,0 +1,8 @@
+### Создание сокращённого URL
+POST http://localhost:8080/create
+Content-Type: application/json
+
+"http://cjdr17afeihmk.biz/123/kdni9/z9d112423421"
+
+### Получение оригинального URL
+GET http://localhost:8080/s/DR8tHeq
